@@ -5,9 +5,9 @@ import Footer from '../components/Footer';
 
 function Userlayout() {
     return (
-        <div className="pagecontainer">
+        <div className="pagecontainer d-flex flex-column min-vh-100">
             <Header />
-            <div className="content">
+            <div className="content flex-fill container py-4">
                 <Outlet />
             </div>
             <Footer />
