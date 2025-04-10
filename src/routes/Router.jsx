@@ -4,6 +4,8 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Userlayout from "../layouts/Userlayout";
 import Movies from "../pages/Movies";
+import Booking from "../pages/Booking";
+import Payment from "../pages/Payment";
 
 const routes = createBrowserRouter([
     {
@@ -24,7 +26,15 @@ const routes = createBrowserRouter([
             },
             {
                 path: "movies",
-                element: <Movies/>
+                element: <Movies />
+            },
+            {
+                path: "booking",
+                element: <Booking />
+            },
+            {
+                path: "payment",
+                element: <Payment />
             }
         ]
     }
