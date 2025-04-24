@@ -5,7 +5,7 @@ function Home() {
   const navigate = useNavigate();
 
   const goToMovies = () => {
-    navigate('/movies');
+    navigate('/login');
   };
   
   return (

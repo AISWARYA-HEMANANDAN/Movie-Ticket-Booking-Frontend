@@ -25,6 +25,7 @@ function Signup() {
       toast.success(res?.data?.message)
       navigate("/login")
     }).catch((err) => {
+      console.log(err); 
       toast.error(err?.response?.data?.error);
     })
 
@@ -35,20 +36,20 @@ function Signup() {
         <h1 className="text-center text-decoration-underline mb-5">Sign Up</h1>
 
         <div className="mb-3">
-          <label for="username" className="form-label d-block">Name</label>
+          <label htmlFor="username" className="form-label d-block">Name</label>
           <input type="text" className="form-control w-100" id="username" required placeholder="Enter name" onChange={handleChange} name='name' />
           <p className="errormessage text-danger" id="usernameError"></p>
         </div>
 
-        <div class="mb-3">
-          <label for="email" className="form-label d-block">Email Address</label>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label d-block">Email Address</label>
           <input type="email" className="form-control w-100" id="email" required placeholder="Enter email" onChange={handleChange} name='email' />
-          <p class="errormessage text-danger" id="emailError"></p>
+          <p className="errormessage text-danger" id="emailError"></p>
         </div>
 
         <div className="mb-3">
-          <label for="password" className="form-label d-block">Password</label>
-          <div class="input-container">
+          <label htmlFor="password" className="form-label d-block">Password</label>
+          <div className="input-container">
             <input type="password" className="form-control w-100" id="password" required placeholder="Enter password" onChange={handleChange} name='password' />
             <span id="icon"><i className="bi bi-eye"></i></span>
           </div>
@@ -56,7 +57,7 @@ function Signup() {
         </div>
 
         <div className="mb-3">
-          <label for="confirmpassword" className="form-label d-block"> Confirm Password</label>
+          <label htmlFor="confirmpassword" className="form-label d-block"> Confirm Password</label>
           <div className="input-container">
             <input type="password" className="form-control w-100" id="confirmpassword" required placeholder="Enter password" onChange={handleChange} name='confirmpassword' />
             <span id="icn"><i className="bi bi-eye"></i></span>
