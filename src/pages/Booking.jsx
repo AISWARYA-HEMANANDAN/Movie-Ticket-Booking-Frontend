@@ -48,7 +48,7 @@ function Booking() {
     const fetchAvailableScreen = async () => {
       if (id && showDate && showTime) {
         try {
-          const formattedShowDate = new Date(showDate).toISOString().slice(0, 10);
+          const formattedShowDate = new Date(showDate).toDateString();
           const res = await getAllScreens(id, formattedShowDate, showTime);
           const allScreens = res.data?.screens || [];
 
