@@ -48,8 +48,7 @@ function Booking() {
     const fetchAvailableScreen = async () => {
       if (id && showDate && showTime) {
         try {
-          const formattedShowDate = new Date(showDate).toDateString();
-          const res = await getAllScreens(id, formattedShowDate, showTime);
+          const res = await getAllScreens(id, showDate, showTime);
           const allScreens = res.data?.screens || [];
 
           console.log("Fetched screens:", allScreens);
@@ -57,7 +56,7 @@ function Booking() {
           const screen = allScreens.find(screen =>
             screen.movieSchedules?.some(s =>
               String(s.movieId) === String(id) &&
-              s.showDate === formattedShowDate &&
+              s.showDate === showDate &&
               s.showTime === showTime
             )
           );
@@ -72,7 +71,7 @@ function Booking() {
 
           const schedule = screen.movieSchedules.find(s =>
             String(s.movieId) === String(id) &&
-            s.showDate === formattedShowDate &&
+            s.showDate === showDate &&
             s.showTime === showTime
           );
 
