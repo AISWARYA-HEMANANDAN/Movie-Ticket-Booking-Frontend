@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 function Signup() {
 
   const navigate = useNavigate()
-  
+
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -25,7 +25,7 @@ function Signup() {
       toast.success(res?.data?.message)
       navigate("/login")
     }).catch((err) => {
-      console.log(err); 
+      console.log(err);
       toast.error(err?.response?.data?.error);
     })
 

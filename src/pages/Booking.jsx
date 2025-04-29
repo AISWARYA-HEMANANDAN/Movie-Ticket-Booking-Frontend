@@ -52,13 +52,28 @@ function Booking() {
           const allScreens = res.data?.screens || [];
 
           console.log("Fetched screens:", allScreens);
+          console.log("Frontend selected showDate:", showDate);
+          console.log("Frontend selected showTime:", showTime);
+
+          allScreens.forEach(screen => {
+            screen.movieSchedules.forEach(s => {
+              console.log("Backend schedule showDate (ISO):", new Date(s.showDate).toISOString().split('T')[0]);
+              console.log("Backend schedule showTime:", s.showTime);
+              console.log("Backend schedule movieId:", s.movieId);
+            });
+          });
+
 
           const screen = allScreens.find(screen =>
-            screen.movieSchedules?.some(s =>
-              String(s.movieId) === String(id) &&
-              s.showDate === showDate &&
-              s.showTime === showTime
-            )
+            screen.movieSchedules?.some(schedule => {
+              const backendShowDate = new Date(schedule.showDate).toISOString().split('T')[0];
+              const targetDate = new Date(showDate).toISOString().split('T')[0];
+              return (
+                String(schedule.movieId._id) === String(id) &&
+                backendShowDate === targetDate &&
+                schedule.showTime === showTime
+              );
+            })
           );
 
           if (!screen) {
@@ -69,11 +84,14 @@ function Booking() {
             return;
           }
 
-          const schedule = screen.movieSchedules.find(s =>
-            String(s.movieId) === String(id) &&
-            s.showDate === showDate &&
-            s.showTime === showTime
-          );
+          const schedule = screen.movieSchedules.find(schedule => {
+            const backendShowDate = new Date(schedule.showDate).toISOString().split('T')[0];
+            return (
+              String(schedule.movieId._id) === String(id) &&
+              backendShowDate === showDate &&
+              schedule.showTime === showTime
+            );
+          });
 
           console.log("Matched screen:", screen);
           console.log("Matched schedule:", schedule);

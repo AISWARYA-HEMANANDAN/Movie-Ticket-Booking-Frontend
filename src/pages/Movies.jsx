@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 function Movies() {
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true); // 🔄 loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getAllMovies()
@@ -18,7 +18,7 @@ function Movies() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setLoading(false)); // 🛑 stop spinner
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

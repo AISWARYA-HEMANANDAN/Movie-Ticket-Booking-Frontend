@@ -18,7 +18,12 @@ function AdminBookings() {
     try {
       setLoading(true);
       const response = await getBookings();
-      setBookings(response.data.bookings || []);
+      console.log(response);
+      if (response.data.bookings && response.data.bookings.length > 0) {
+        setBookings(response.data.bookings);
+      } else {
+        setBookings([]);
+      }
     } catch (err) {
       console.error('Error fetching bookings:', err);
       toast.error('Error fetching bookings');
@@ -66,12 +71,13 @@ function AdminBookings() {
               <Card className="shadow-sm border-0 h-100">
                 <Card.Body>
                   <div className="d-flex justify-content-between align-items-start mb-2">
-                    <h5 className="mb-0">🎟️ {booking.movie?.title || 'Untitled Movie'}</h5>
+                    <h5 className="mb-0">🎟️ {booking.movieId?.title || 'Untitled Movie'}</h5>
                     <Badge bg="info">{booking.seats?.length || 0} Seats</Badge>
                   </div>
-                  <p className="mb-1"><strong>User:</strong> {booking.userName || 'N/A'}</p>
-                  <p className="mb-1"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleString()}</p>
-                  <p className="mb-2"><strong>Seats:</strong> {booking.seats?.join(', ') || 'N/A'}</p>
+                  <p className="mb-1"><strong>User:</strong> {booking.userId?.name || 'N/A'}</p>
+                  <p className="mb-1"><strong>Email:</strong> {booking.userId?.email || 'N/A'}</p>
+                  <p className="mb-1"><strong>Date:</strong> {new Date(booking.createdAt).toLocaleDateString('en-GB')}</p>
+                  <p className="mb-2"><strong>Seats:</strong> {booking.seats?.map(seat => `${seat.row}${seat.col}`).join(', ') || 'N/A'}</p>
                   <div className="d-flex justify-content-between">
                     <Button variant="outline-primary" size="sm" onClick={() => handleViewBookingDetails(booking._id)}>
                       View Details
@@ -95,10 +101,11 @@ function AdminBookings() {
           </Modal.Header>
           <Modal.Body>
             <p><strong>Booking ID:</strong> {selectedBooking._id}</p>
-            <p><strong>User:</strong> {selectedBooking.userName}</p>
-            <p><strong>Movie:</strong> {selectedBooking.movie?.title || 'N/A'}</p>
-            <p><strong>Seats:</strong> {selectedBooking.seats?.join(', ') || 'N/A'}</p>
-            <p><strong>Booked At:</strong> {new Date(selectedBooking.createdAt).toLocaleString()}</p>
+            <p><strong>User:</strong> {selectedBooking.userId?.name || 'N/A'}</p>
+            <p><strong>Email:</strong> {selectedBooking.userId?.email || 'N/A'}</p>
+            <p><strong>Movie:</strong> {selectedBooking.movieId?.title || 'N/A'}</p>
+            <p><strong>Seats:</strong> {selectedBooking.seats?.map(seat => `${seat.row}${seat.col}`).join(', ') || 'N/A'}</p>
+            <p><strong>Booked At:</strong> {new Date(selectedBooking.createdAt).toLocaleDateString('en-GB')}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setSelectedBooking(null)}>Close</Button>

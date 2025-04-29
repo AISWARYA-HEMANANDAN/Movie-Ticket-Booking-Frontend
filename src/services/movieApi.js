@@ -1,81 +1,70 @@
 import userInstance from "../axios/axiosInstance"
+import adminInstance from "../axios/adminInstance";
 
-// Movies
-export const getAllMovies = () => {
-    return userInstance.get("/movie/getallmovies")
-}
+// ---------------- Movies ----------------
 
-export const getMovieById = (id) => {
-    return userInstance.get(`/movie/getmovie/${id}`)
-}
+// User APIs
+export const getAllMovies = () => userInstance.get("/movie/getallmovies");
+export const getMovieById = (id) => userInstance.get(`/movie/getmovie/${id}`);
 
-export const addMovie = (movieData) => {
-    return userInstance.post('/movie/addmovie', movieData);
-}
+// Admin APIs
+export const addMovie = (formData) => {
+    return adminInstance.post('/movie/createmovie', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+};
 
-export const updateMovie = (id, movieData) => {
-    return userInstance.put(`/movie/updatemovie/${id}`, movieData);
-}
+export const updateMovie = (id, formData) => {
+    return adminInstance.put(`/movie/updatemovie/${id}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+};
 
-export const deleteMovie = (id) => {
-    return userInstance.delete(`/movie/deletemovie/${id}`);
-}
+export const deleteMovie = (id) => adminInstance.delete(`/movie/deletemovie/${id}`);
 
-// Screens
+
+// ---------------- Screens ----------------
+
+// User API
 export const getAllScreens = (movieId, showDate, showTime) => {
     return userInstance.get(`/screen/getallscreens`, {
-        params: { movieId, showDate, showTime }
-    })
-}
+        params: { movieId, showDate, showTime },
+    });
+};
 
-export const createScreen = (screenData) => {
-    return userInstance.post('/screen/createscreen', screenData)
-}
+// Admin APIs
+export const createScreen = (screenData) => adminInstance.post('/screen/createscreen', screenData);
+export const getScreens = () => adminInstance.get('/screen/getscreens');
+export const getScreenById = (screenId) => adminInstance.get(`/screen/getscreen/${screenId}`);
+export const updateScreen = (screenId, updatedData) =>
+    adminInstance.patch(`/screen/updatescreen/${screenId}`, updatedData);
+export const deleteScreen = (screenId) => adminInstance.delete(`/screen/deletescreen/${screenId}`);
+export const addMovieScheduleToScreen = (scheduleData) =>
+    adminInstance.post('/screen/addmoviescheduletoscreen', scheduleData);
 
-export const getScreens = () => {
-    return userInstance.get('/screen/getscreens')
-}
+export const getAllScreensAdmin = () => adminInstance.get('/screen/getallscreens');
 
-export const getScreenById = (screenId) => {
-    return userInstance.get(`/screen/getscreen/${screenId}`)
-}
 
-export const updateScreen = (screenId, updatedData) => {
-    return userInstance.put(`/screen/updatescreen/${screenId}`, updatedData)
-}
 
-export const deleteScreen = (screenId) => {
-    return userInstance.delete(`/screen/deletescreen/${screenId}`)
-}
+// ---------------- Booking ----------------
 
-// Booking
-export const createBooking = (bookingData) => {
-    return userInstance.post("/booking/createbooking", bookingData)
-}
+// User API
+export const createBooking = (bookingData) => userInstance.post("/booking/createbooking", bookingData);
 
-export const getBookings = () => {
-    return userInstance.get('/booking/allbookings')
-}
+// Admin API
+export const getBookings = () => adminInstance.get('/booking/getbookings');
 
-export const deleteBooking = (bookingId) => {
-    return userInstance.delete(`/booking/deletebooking/${bookingId}`)
-}
+// Admin (optional) — if only admin can delete
+export const deleteBooking = (bookingId) => adminInstance.delete(`/booking/deletebooking/${bookingId}`);
 
-// Payment
+
+// ---------------- Payment ----------------
+
 export const makePayment = (data) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     return userInstance.post("/payment/stripe-checkout", data, {
         headers: {
-            Authorization: `Bearer ${token}` // Add the token to headers
-        }
-    })
-}
-
-
-
-
-
-
-
-
-
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};

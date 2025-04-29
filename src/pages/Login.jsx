@@ -57,7 +57,6 @@ function Login({ role = "user" }) {
         </div>
         <p className="text-center mt-1">Don't have an account?<a href="/register">Signup</a></p>
       </form>
-
     </div>
   )
 }

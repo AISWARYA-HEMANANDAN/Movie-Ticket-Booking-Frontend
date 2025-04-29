@@ -27,13 +27,8 @@ function Header2() {
   return (
     <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'} px-3 d-flex justify-content-between`}>
       <a className="navbar-brand d-flex align-items-center" href="#home">
-        <img
-          src="https://i.pinimg.com/736x/1a/06/c4/1a06c43c0049c12cf16a37c42a571dbc.jpg"
-          alt="Movie time Logo"
-          width="100"
-          height="50"
-          className="d-inline-block align-top me-2"
-        />
+        <img src="https://i.pinimg.com/736x/1a/06/c4/1a06c43c0049c12cf16a37c42a571dbc.jpg"
+          alt="Movie time Logo" width="100" height="50" className="d-inline-block align-top me-2" />
         MOVIE TIME
       </a>
 

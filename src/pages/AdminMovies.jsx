@@ -12,7 +12,15 @@ function AdminMoviesPage() {
   const [movies, setMovies] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingMovie, setEditingMovie] = useState(null);
-  const [formData, setFormData] = useState({ title: '', description: '' });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    rating: '',
+    genre: '',
+    duration: '',
+    posterImg: null,
+  });
+
 
   useEffect(() => {
     fetchMovies();
@@ -24,18 +32,31 @@ function AdminMoviesPage() {
 
   const handleAddOrEdit = (e) => {
     e.preventDefault();
+
+    const payload = new FormData();
+    payload.append('title', formData.title);
+    payload.append('description', formData.description);
+    payload.append('rating', formData.rating);
+    payload.append('genre', formData.genre);
+    payload.append('duration', formData.duration);
+
+    if (formData.posterImg) {
+      payload.append('posterImg', formData.posterImg);
+    }
+
     if (editingMovie) {
-      updateMovie(editingMovie._id, formData).then(() => {
+      updateMovie(editingMovie._id, payload).then(() => {
         fetchMovies();
         setShowModal(false);
       });
     } else {
-      addMovie(formData).then(() => {
+      addMovie(payload).then(() => {
         fetchMovies();
         setShowModal(false);
       });
     }
   };
+
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this movie?')) {
@@ -103,6 +124,18 @@ function AdminMoviesPage() {
                 required
               />
             </Form.Group>
+            <Form.Group>
+              <Form.Label>Poster Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) =>
+                  setFormData({ ...formData, posterImg: e.target.files[0] })
+                }
+                required={!editingMovie} // Only required for "add", not "edit"
+              />
+            </Form.Group>
+
             <Form.Group>
               <Form.Label>Description</Form.Label>
               <Form.Control

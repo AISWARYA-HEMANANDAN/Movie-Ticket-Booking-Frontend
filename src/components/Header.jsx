@@ -66,10 +66,8 @@ function Header() {
     } else {
       const initial = user?.name?.charAt(0)?.toUpperCase() || 'U';
       return (
-        <div
-          className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2"
-          style={{ width: '30px', height: '30px', fontSize: '16px' }}
-        >
+        <div className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2"
+          style={{ width: '30px', height: '30px', fontSize: '16px' }}>
           {initial}
         </div>
       );
@@ -80,13 +78,8 @@ function Header() {
     <Navbar bg={darkMode ? 'dark' : 'light'} variant={darkMode ? 'dark' : 'light'} expand="lg" className="px-3">
       <Container fluid>
         <Navbar.Brand href="/">
-          <img
-            src="https://i.pinimg.com/736x/1a/06/c4/1a06c43c0049c12cf16a37c42a571dbc.jpg"
-            alt="Movie time Logo"
-            width="100"
-            height="50"
-            className="d-inline-block align-top me-2"
-          />
+          <img src="https://i.pinimg.com/736x/1a/06/c4/1a06c43c0049c12cf16a37c42a571dbc.jpg"
+            alt="Movie time Logo" width="100" height="50" className="d-inline-block align-top me-2" />
           MOVIE TIME
         </Navbar.Brand>
 
@@ -98,14 +91,12 @@ function Header() {
               placeholder="Search movies"
               className="me-2"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+              onChange={(e) => setSearch(e.target.value)} />
             <Button variant="outline-success" type="submit">Search</Button>
           </Form>
 
           <Nav className="align-items-center">
             <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
-
             {!user ? (
               <>
                 <Nav.Link onClick={() => navigate("/login")}>Login</Nav.Link>
@@ -134,8 +125,7 @@ function Header() {
             <Button
               variant="outline-secondary"
               className="ms-2"
-              onClick={toggleTheme}
-            >
+              onClick={toggleTheme}>
               {darkMode ? <FaSun /> : <FaMoon />}
             </Button>
           </Nav>

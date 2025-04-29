@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap';
 import { FaFilm, FaTv, FaTicketAlt } from 'react-icons/fa';
+import { getAllMovies, getAllScreensAdmin, getBookings } from '../services/movieApi';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -11,20 +12,27 @@ function AdminDashboard() {
     bookings: 0,
   });
 
+  const fetchDashboardStats = async () => {
+    try {
+      const [moviesRes, screensRes, bookingsRes] = await Promise.all([
+        getAllMovies(),
+        getAllScreensAdmin(),
+        getBookings(),
+      ]);
+
+      setData({
+        movies: moviesRes?.data?.movies?.length || 0,
+        screens: screensRes?.data?.screens?.length || 0,
+        bookings: bookingsRes?.data?.bookings?.length || 0,
+      });
+    } catch (err) {
+      console.error('Error fetching dashboard stats:', err);
+
+      setData({ movies: 0, screens: 0, bookings: 0 });
+    }
+  };
+
   useEffect(() => {
-    // Simulate fetching data
-    const fetchDashboardStats = async () => {
-      try {
-        const stats = {
-          movies: 12,
-          screens: 5,
-          bookings: 43,
-        };
-        setData(stats);
-      } catch (err) {
-        console.error('Error fetching dashboard stats', err);
-      }
-    };
     fetchDashboardStats();
   }, []);
 
