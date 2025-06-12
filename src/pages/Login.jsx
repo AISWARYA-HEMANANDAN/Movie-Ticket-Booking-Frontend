@@ -18,10 +18,12 @@ function Login({ role = "user" }) {
       console.log(res);
       if (role == "admin") {
         localStorage.setItem("admin-token", res?.data?.token)
+        window.dispatchEvent(new Event("admin-login"));  // <-- Dispatch event here
         toast.success(res?.data?.message)
         navigate("/admin/dashboard")
       } else {
         localStorage.setItem('token', res?.data?.token);
+        window.dispatchEvent(new Event("user-login"));  // <-- Dispatch event here
         toast.success(res?.data?.message)
         navigate("/movies")
       }

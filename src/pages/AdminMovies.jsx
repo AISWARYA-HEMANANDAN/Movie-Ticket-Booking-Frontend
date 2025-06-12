@@ -83,29 +83,32 @@ function AdminMoviesPage() {
       </div>
 
       <Row xs={1} sm={2} md={3} className="g-4">
-        {movies.map((movie) => (
-          <Col key={movie._id}>
-            <Card className="shadow-sm border-0 h-100">
-              <Card.Body className="d-flex flex-column justify-content-between">
-                <div>
-                  <Card.Title className="fw-semibold text-primary">{movie.title}</Card.Title>
-                  <Card.Text>{movie.description}</Card.Text>
-                  <Card.Text>{movie.rating}</Card.Text>
-                  <Card.Text>{movie.genre}</Card.Text>
-                  <Card.Text>{movie.duration}</Card.Text>
-                </div>
-                <div className="d-flex justify-content-end gap-2 mt-3">
-                  <Button variant="outline-primary" size="sm" onClick={() => openModal(movie)}>
-                    Edit
-                  </Button>
-                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(movie._id)}>
-                    Delete
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+        {[...movies]
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .map((movie) => (
+
+            <Col key={movie._id}>
+              <Card className="shadow-sm border-0 h-100">
+                <Card.Body className="d-flex flex-column justify-content-between">
+                  <div>
+                    <Card.Title className="fw-semibold text-primary">{movie.title}</Card.Title>
+                    <Card.Text>{movie.description}</Card.Text>
+                    <Card.Text>{movie.rating}</Card.Text>
+                    <Card.Text>{movie.genre}</Card.Text>
+                    <Card.Text>{movie.duration}</Card.Text>
+                  </div>
+                  <div className="d-flex justify-content-end gap-2 mt-3">
+                    <Button variant="outline-primary" size="sm" onClick={() => openModal(movie)}>
+                      Edit
+                    </Button>
+                    <Button variant="outline-danger" size="sm" onClick={() => handleDelete(movie._id)}>
+                      Delete
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
       </Row>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>

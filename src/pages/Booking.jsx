@@ -24,7 +24,10 @@ function Booking() {
   const [message, setMessage] = useState('');
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const availableShowTimes = ['10:00 AM', '1:00 PM', '4:00 PM', '7:00 PM', '10:00 PM'];
+  const [availableSchedules, setAvailableSchedules] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
+  const [availableTimesForDate, setAvailableTimesForDate] = useState([]);
+
   const seatRows = ['A', 'B', 'C', 'D', 'E', 'F'];
   const seatCols = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -45,73 +48,64 @@ function Booking() {
   }, [id]);
 
   useEffect(() => {
-    const fetchAvailableScreen = async () => {
-      if (id && showDate && showTime) {
-        try {
-          const res = await getAllScreens(id, showDate, showTime);
+    if (id) {
+      getAllScreens(id)
+        .then((res) => {
           const allScreens = res.data?.screens || [];
-
-          console.log("Fetched screens:", allScreens);
-          console.log("Frontend selected showDate:", showDate);
-          console.log("Frontend selected showTime:", showTime);
+          const schedules = [];
 
           allScreens.forEach(screen => {
-            screen.movieSchedules.forEach(s => {
-              console.log("Backend schedule showDate (ISO):", new Date(s.showDate).toISOString().split('T')[0]);
-              console.log("Backend schedule showTime:", s.showTime);
-              console.log("Backend schedule movieId:", s.movieId);
+            screen.movieSchedules.forEach(schedule => {
+              if (String(schedule.movieId?._id || schedule.movieId) === String(id)) {
+                schedules.push({
+                  screenId: screen._id,
+                  showDate: new Date(schedule.showDate).toISOString().split('T')[0],
+                  showTime: schedule.showTime,
+                  notAvailableSeats: schedule.notAvailableSeats,
+                  ticketPrice: screen.ticketPrice || 150
+                });
+              }
             });
           });
 
+          setAvailableSchedules(schedules);
+          const dates = [...new Set(schedules.map(s => s.showDate))];
+          setAvailableDates(dates);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [id]);
 
-          const screen = allScreens.find(screen =>
-            screen.movieSchedules?.some(schedule => {
-              const backendShowDate = new Date(schedule.showDate).toISOString().split('T')[0];
-              const targetDate = new Date(showDate).toISOString().split('T')[0];
-              return (
-                String(schedule.movieId._id) === String(id) &&
-                backendShowDate === targetDate &&
-                schedule.showTime === showTime
-              );
-            })
-          );
+  useEffect(() => {
+    if (showDate) {
+      const times = availableSchedules
+        .filter(s => s.showDate === showDate)
+        .map(s => s.showTime);
+      setAvailableTimesForDate([...new Set(times)]);
+    } else {
+      setAvailableTimesForDate([]);
+    }
+  }, [showDate, availableSchedules]);
 
-          if (!screen) {
-            setScreenId('');
-            setTicketPrice(0);
-            setNotAvailableSeats([]);
-            setMessage("No screen available for the selected schedule.");
-            return;
-          }
+  useEffect(() => {
+    if (showDate && showTime) {
+      const schedule = availableSchedules.find(
+        s => s.showDate === showDate && s.showTime === showTime
+      );
 
-          const schedule = screen.movieSchedules.find(schedule => {
-            const backendShowDate = new Date(schedule.showDate).toISOString().split('T')[0];
-            return (
-              String(schedule.movieId._id) === String(id) &&
-              backendShowDate === showDate &&
-              schedule.showTime === showTime
-            );
-          });
-
-          console.log("Matched screen:", screen);
-          console.log("Matched schedule:", schedule);
-
-          setScreenId(screen._id);
-          setTicketPrice(screen.ticketPrice || 150);
-          setNotAvailableSeats(schedule?.notAvailableSeats || []);
-          setMessage('');
-        } catch (err) {
-          console.error("Error fetching screens:", err);
-          setScreenId('');
-          setTicketPrice(0);
-          setNotAvailableSeats([]);
-          setMessage(err?.response?.data?.error || "Error fetching screens.");
-        }
+      if (schedule) {
+        setScreenId(schedule.screenId);
+        setTicketPrice(schedule.ticketPrice);
+        setNotAvailableSeats(schedule.notAvailableSeats || []);
+        setMessage('');
+      } else {
+        setScreenId('');
+        setTicketPrice(0);
+        setNotAvailableSeats([]);
+        setMessage('No screen available for selected schedule.');
       }
-    };
-
-    fetchAvailableScreen();
-  }, [showDate, showTime, id]);
+    }
+  }, [showDate, showTime, availableSchedules]);
 
   const isSeatTaken = (row, col) =>
     notAvailableSeats.some(seat => seat.row === row && seat.col === col);
@@ -217,20 +211,38 @@ function Booking() {
       <Form onSubmit={handleBooking} className="mt-3">
         <Form.Group className="mb-3">
           <Form.Label>Show Date</Form.Label>
-          <Form.Control
-            type="date"
+          <Form.Select
             value={showDate}
-            onChange={(e) => setShowDate(e.target.value)}
+            onChange={(e) => {
+              setShowDate(e.target.value);
+              setShowTime('');
+            }}
             required
-          />
+          >
+            <option value="">Select a date</option>
+            {availableDates.map(date => {
+              const [year, month, day] = date.split('-');
+              const formattedDate = `${day}-${month}-${year}`;
+              return (
+                <option key={date} value={date}>
+                  {formattedDate}
+                </option>
+              );
+            })}
+          </Form.Select>
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Show Time</Form.Label>
-          <Form.Select value={showTime} onChange={(e) => setShowTime(e.target.value)} required>
+          <Form.Select
+            value={showTime}
+            onChange={(e) => setShowTime(e.target.value)}
+            required
+            disabled={!showDate}
+          >
             <option value="">Select a time</option>
-            {availableShowTimes.map((time, index) => (
-              <option key={index} value={time}>{time}</option>
+            {availableTimesForDate.map(time => (
+              <option key={time} value={time}>{time}</option>
             ))}
           </Form.Select>
         </Form.Group>
@@ -269,18 +281,14 @@ function Booking() {
         </div>
 
         {ticketPrice > 0 && selectedSeats.length > 0 && (
-          <Alert variant="secondary">
-            🎟️ Total Price: ₹{totalPrice}
-          </Alert>
+          <Alert variant="secondary">🎟️ Total Price: ₹{totalPrice}</Alert>
         )}
 
         <div style={{ marginTop: "20px", fontWeight: "bold" }}>
           Total Price: ₹{totalPrice}
         </div>
 
-        <Button variant="primary" type="submit">
-          Book Now
-        </Button>
+        <Button variant="primary" type="submit">Book Now</Button>
       </Form>
 
       {message && <Alert className="mt-3" variant="info">{message}</Alert>}

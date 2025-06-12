@@ -8,8 +8,19 @@ function Header2() {
   const [adminLoggedIn, setAdminLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('admin-token');
-    setAdminLoggedIn(!!token);
+    const checkToken = () => {
+      const token = localStorage.getItem('admin-token');
+      setAdminLoggedIn(!!token);
+    };
+
+    checkToken(); // check on mount
+
+    // Listen for admin-login event
+    window.addEventListener('admin-login', checkToken);
+
+    return () => {
+      window.removeEventListener('admin-login', checkToken);
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -21,7 +32,7 @@ function Header2() {
   const handleLogout = () => {
     localStorage.removeItem('admin-token');
     setAdminLoggedIn(false);
-    navigate('/admin/login');
+    navigate('/login');
   };
 
   return (
@@ -37,6 +48,7 @@ function Header2() {
           <li className="nav-item" onClick={() => navigate("/admin/movies")}><a className="nav-link">Movies</a></li>
           <li className="nav-item" onClick={() => navigate("/admin/screens")}><a className="nav-link">Screens</a></li>
           <li className="nav-item" onClick={() => navigate("/admin/bookings")}><a className="nav-link">Bookings</a></li>
+          <li className="nav-item" onClick={() => navigate("/admin/users")}><a className="nav-link">Users</a></li>
         </ul>
 
         <div className="d-flex align-items-center gap-2">

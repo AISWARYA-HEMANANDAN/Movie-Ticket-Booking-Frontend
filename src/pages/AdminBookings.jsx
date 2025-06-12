@@ -104,6 +104,8 @@ function AdminBookings() {
             <p><strong>User:</strong> {selectedBooking.userId?.name || 'N/A'}</p>
             <p><strong>Email:</strong> {selectedBooking.userId?.email || 'N/A'}</p>
             <p><strong>Movie:</strong> {selectedBooking.movieId?.title || 'N/A'}</p>
+            <p><strong>Show Date:</strong> {selectedBooking.showDate ? new Date(selectedBooking.showDate).toLocaleDateString('en-GB') : 'N/A'}</p>
+            <p><strong>Show Time:</strong> {selectedBooking.showTime || 'N/A'}</p>
             <p><strong>Seats:</strong> {selectedBooking.seats?.map(seat => `${seat.row}${seat.col}`).join(', ') || 'N/A'}</p>
             <p><strong>Booked At:</strong> {new Date(selectedBooking.createdAt).toLocaleDateString('en-GB')}</p>
           </Modal.Body>

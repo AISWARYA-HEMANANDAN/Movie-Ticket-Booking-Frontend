@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Container, Row, Col } from 'react-bootstrap';
-import { FaFilm, FaTv, FaTicketAlt } from 'react-icons/fa';
-import { getAllMovies, getAllScreensAdmin, getBookings } from '../services/movieApi';
+import { FaFilm, FaTv, FaTicketAlt, FaUsers } from 'react-icons/fa';
+import { getAllMovies, getAllScreensAdmin, getBookings, getAllUsers } from '../services/movieApi';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -10,20 +10,23 @@ function AdminDashboard() {
     movies: 0,
     screens: 0,
     bookings: 0,
+    users: 0,
   });
 
   const fetchDashboardStats = async () => {
     try {
-      const [moviesRes, screensRes, bookingsRes] = await Promise.all([
+      const [moviesRes, screensRes, bookingsRes, usersRes] = await Promise.all([
         getAllMovies(),
         getAllScreensAdmin(),
         getBookings(),
+        getAllUsers(),
       ]);
 
       setData({
         movies: moviesRes?.data?.movies?.length || 0,
         screens: screensRes?.data?.screens?.length || 0,
         bookings: bookingsRes?.data?.bookings?.length || 0,
+        users: usersRes?.data?.users?.length || 0,
       });
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
@@ -41,7 +44,7 @@ function AdminDashboard() {
       <h1 className="mb-4 text-center">ADMIN DASHBOARD</h1>
 
       <Row className="mb-5">
-        <Col md={4} className="mb-3">
+        <Col md={3} className="mb-3">
           <Card className="shadow-sm h-100">
             <Card.Body className="d-flex align-items-center justify-content-between">
               <div>
@@ -52,7 +55,7 @@ function AdminDashboard() {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4} className="mb-3">
+        <Col md={3} className="mb-3">
           <Card className="shadow-sm h-100">
             <Card.Body className="d-flex align-items-center justify-content-between">
               <div>
@@ -63,7 +66,7 @@ function AdminDashboard() {
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4} className="mb-3">
+        <Col md={3} className="mb-3">
           <Card className="shadow-sm h-100">
             <Card.Body className="d-flex align-items-center justify-content-between">
               <div>
@@ -74,22 +77,38 @@ function AdminDashboard() {
             </Card.Body>
           </Card>
         </Col>
+        <Col md={3} className="mb-3">
+          <Card className="shadow-sm h-100">
+            <Card.Body className="d-flex align-items-center justify-content-between">
+              <div>
+                <Card.Title>USERS</Card.Title>
+                <Card.Text className="h3 text-danger">{data.users}</Card.Text>
+              </div>
+              <FaUsers size={40} className="text-dark" />
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
 
       <Row className="text-center">
-        <Col md={4} className="mb-2">
+        <Col md={3} className="mb-2">
           <Button variant="success" className="w-100" onClick={() => navigate('/admin/movies')}>
             Manage Movies
           </Button>
         </Col>
-        <Col md={4} className="mb-2">
+        <Col md={3} className="mb-2">
           <Button variant="primary" className="w-100" onClick={() => navigate('/admin/screens')}>
             Manage Screens
           </Button>
         </Col>
-        <Col md={4} className="mb-2">
+        <Col md={3} className="mb-2">
           <Button variant="danger" className="w-100" onClick={() => navigate('/admin/bookings')}>
             Manage Bookings
+          </Button>
+        </Col>
+        <Col md={3} className="mb-2">
+          <Button variant="dark" className="w-100" onClick={() => navigate('/admin/users')}>
+            Users List
           </Button>
         </Col>
       </Row>

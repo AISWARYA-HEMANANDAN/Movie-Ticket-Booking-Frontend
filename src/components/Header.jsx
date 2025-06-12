@@ -6,42 +6,48 @@ import { Dropdown, Nav, Navbar, Container, Form, Button, Image } from 'react-boo
 
 function Header() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const adminToken = localStorage.getItem("admin-token");
+    const handleLoginEvent = () => {
+      const token = localStorage.getItem("token");
+      const adminToken = localStorage.getItem("admin-token");
 
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser(decoded);
-        setRole('user');
-      } catch (err) {
-        console.error("Invalid user token", err);
-        localStorage.removeItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          setUser(decoded);
+          setRole('user');
+        } catch (err) {
+          console.error("Invalid user token", err);
+          localStorage.removeItem("token");
+        }
+      } else if (adminToken) {
+        try {
+          const decoded = jwtDecode(adminToken);
+          setUser(decoded);
+          setRole('admin');
+        } catch (err) {
+          console.error("Invalid admin token", err);
+          localStorage.removeItem("admin-token");
+        }
       }
-    } else if (adminToken) {
-      try {
-        const decoded = jwtDecode(adminToken);
-        setUser(decoded);
-        setRole('admin');
-      } catch (err) {
-        console.error("Invalid admin token", err);
-        localStorage.removeItem("admin-token");
-      }
-    }
+    };
+
+    // Initial check
+    handleLoginEvent();
+
+    // Listen to login/logout events
+    window.addEventListener("user-login", handleLoginEvent);
+    window.addEventListener("admin-login", handleLoginEvent);
+
+    return () => {
+      window.removeEventListener("user-login", handleLoginEvent);
+      window.removeEventListener("admin-login", handleLoginEvent);
+    };
   }, []);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(`/search?query=${encodeURIComponent(search)}`);
-    }
-  };
 
   const toggleTheme = () => {
     const isDark = !darkMode;
@@ -85,15 +91,6 @@ function Header() {
 
         <Navbar.Toggle aria-controls="navbar-content" />
         <Navbar.Collapse id="navbar-content">
-          <Form className="d-flex me-auto" onSubmit={handleSearch}>
-            <Form.Control
-              type="search"
-              placeholder="Search movies"
-              className="me-2"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)} />
-            <Button variant="outline-success" type="submit">Search</Button>
-          </Form>
 
           <Nav className="align-items-center">
             <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>

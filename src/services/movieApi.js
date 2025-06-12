@@ -58,6 +58,14 @@ export const getBookings = () => adminInstance.get('/booking/getbookings');
 export const deleteBooking = (bookingId) => adminInstance.delete(`/booking/deletebooking/${bookingId}`);
 
 
+
+// ---------------- Users ----------------
+
+// Admin API
+export const getAllUsers = () => adminInstance.get('/user/getallusers');
+
+
+
 // ---------------- Payment ----------------
 
 export const makePayment = (data) => {

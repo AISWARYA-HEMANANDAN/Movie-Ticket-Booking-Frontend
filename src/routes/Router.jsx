@@ -12,6 +12,7 @@ import AdminScreens from "../pages/AdminScreens";
 import AdminMovies from "../pages/AdminMovies";
 import AdminBookings from "../pages/AdminBookings";
 import Adminlayout from "../layouts/Adminlayout";
+import AdminUsers from "../pages/AdminUsers";
 
 const routes = createBrowserRouter([
     {
@@ -73,6 +74,10 @@ const routes = createBrowserRouter([
             {
                 path: "bookings",
                 element: <AdminBookings />
+            },
+            {
+                path: "users",
+                element: <AdminUsers />
             }
         ]
     }
