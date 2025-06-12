@@ -46,7 +46,6 @@ function AdminUsers() {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Created</th>
-                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -61,12 +60,6 @@ function AdminUsers() {
                       month: '2-digit',
                       year: '2-digit',
                     })}
-                  </td>
-
-                  <td>
-                    <Badge bg={user.isActive ? 'success' : 'secondary'}>
-                      {user.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
                   </td>
                 </tr>
               ))}
